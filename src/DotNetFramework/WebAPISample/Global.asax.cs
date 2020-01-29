@@ -1,3 +1,4 @@
+using App.Metrics.Gauge;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,14 @@ namespace WebAPISample
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            var metrics = ApiMetrics.GetMetrics();
+
+            var unixTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            metrics.Measure.Gauge.SetValue(new GaugeOptions
+            {
+                Name = "Boot Time Seconds"
+            }, unixTimestamp);
         }
     }
 }
