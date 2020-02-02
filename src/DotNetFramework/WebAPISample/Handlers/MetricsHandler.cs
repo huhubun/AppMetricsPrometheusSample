@@ -95,7 +95,7 @@ namespace WebAPISample.Handlers
                 Name = "Response Status Code",
                 Tags = new MetricTags(
                 new string[] { "method", "route", "status_code" },
-                new string[] { request.Method.Method, routeTemplate, response.StatusCode.ToString() }
+                new string[] { request.Method.Method, routeTemplate, ((int)response.StatusCode).ToString() }
                 )
             });
         }
