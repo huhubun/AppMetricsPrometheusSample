@@ -102,5 +102,10 @@ namespace WebAPISample.Handlers
 
         #endregion
 
+        #region 
+
+        // TODO 加一个成功响应时间、失败响应时间 分开统计的，根据状态码分开？
+
+        #endregion
     }
 }

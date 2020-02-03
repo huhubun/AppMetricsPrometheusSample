@@ -7,7 +7,7 @@
 
 ## .NET Framework Sample
 `DotNetFrameworkSample.sln`
-- [ASP.NET Web API](./src/DotNetFramework/WebAPISample/README.md)
+- [ASP.NET Web API](./src/DotNetFramework/WebAPISample/)
 
 ## .NET Core
 

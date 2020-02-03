@@ -183,6 +183,7 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Grafana\dashboard.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
