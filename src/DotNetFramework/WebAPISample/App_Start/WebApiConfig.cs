@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
+﻿using System.Web.Http;
 using WebAPISample.Handlers;
 
 namespace WebAPISample
@@ -25,6 +22,8 @@ namespace WebAPISample
             // Metrics Handler
             config.MessageHandlers.Add(new MetricsHandler());
 
+            // Filters
+            config.Filters.Add(new ExceptionMetricsFilterAttribute());
         }
     }
 }

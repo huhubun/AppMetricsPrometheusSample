@@ -159,8 +159,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="ApiMetrics.cs" />
+    <Compile Include="Handlers\ExceptionMetricsFilterAttribute.cs" />
     <Compile Include="Handlers\MetricsHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomThings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
@@ -183,7 +185,6 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Grafana\dashboard.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>

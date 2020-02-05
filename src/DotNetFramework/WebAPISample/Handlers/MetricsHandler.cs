@@ -1,6 +1,6 @@
 ﻿using App.Metrics;
 using App.Metrics.Timer;
-using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -23,12 +23,11 @@ namespace WebAPISample.Handlers
                 return await base.SendAsync(request, cancellationToken);
             }
 
-            StartRecordingResponseTime(request, routeTemplate);
+            StartRecordingResponseTime(request);
 
             var response = await base.SendAsync(request, cancellationToken);
 
-            RecordStatusCode(request, routeTemplate, response);
-            EndRecordingResponseTime(response);
+            EndRecordingResponseTime(routeTemplate, request, response);
 
             return response;
         }
@@ -48,64 +47,38 @@ namespace WebAPISample.Handlers
         /// </summary>
         /// <param name="request"></param>
         /// <param name="routeTemplate"></param>
-        private void StartRecordingResponseTime(HttpRequestMessage request, string routeTemplate)
+        private void StartRecordingResponseTime(HttpRequestMessage request)
         {
-            var requestTimer = ApiMetrics.GetMetrics().Measure.Timer.Time(new TimerOptions
-            {
-                Name = "Response Time",
-                Tags = new MetricTags(
-                    new string[] { "method", "route" },
-                    new string[] { request.Method.Method, routeTemplate }
-                    ),
-                DurationUnit = TimeUnit.Milliseconds,
-                RateUnit = TimeUnit.Milliseconds,
-                MeasurementUnit = Unit.Requests
-            });
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
-            request.Properties.Add(API_METRICS_RESPONSE_TIME_KEY, requestTimer);
+            request.Properties.Add(API_METRICS_RESPONSE_TIME_KEY, stopwatch);
         }
 
         /// <summary>
         /// 停止记录响应时间
         /// </summary>
         /// <param name="response"></param>
-        private void EndRecordingResponseTime(HttpResponseMessage response)
+        private void EndRecordingResponseTime(string routeTemplate, HttpRequestMessage request, HttpResponseMessage response)
         {
-            var responseTimer = response.RequestMessage.Properties[API_METRICS_RESPONSE_TIME_KEY];
+            var stopwatch = response.RequestMessage.Properties[API_METRICS_RESPONSE_TIME_KEY] as Stopwatch;
 
-            using (responseTimer as IDisposable) { }
+            ApiMetrics.GetMetrics().Provider.Timer.Instance(new TimerOptions
+            {
+                Name = "Response Time",
+                Tags = new MetricTags(
+                    new string[] { "method", "route", "status" },
+                    new string[] { request.Method.Method, routeTemplate, ((int)response.StatusCode).ToString() }
+                    ),
+                DurationUnit = TimeUnit.Milliseconds,
+                RateUnit = TimeUnit.Milliseconds,
+                MeasurementUnit = Unit.Requests
+            }).Record(stopwatch.ElapsedMilliseconds, TimeUnit.Milliseconds);
 
             response.RequestMessage.Properties.Remove(API_METRICS_RESPONSE_TIME_KEY);
         }
 
         #endregion
 
-        #region Status Code
-
-        /// <summary>
-        /// 记录 HTTP 响应的状态码
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="routeTemplate"></param>
-        /// <param name="response"></param>
-        private void RecordStatusCode(HttpRequestMessage request, string routeTemplate, HttpResponseMessage response)
-        {
-            ApiMetrics.GetMetrics().Measure.Counter.Increment(new App.Metrics.Counter.CounterOptions
-            {
-                Name = "Response Status Code",
-                Tags = new MetricTags(
-                new string[] { "method", "route", "status_code" },
-                new string[] { request.Method.Method, routeTemplate, ((int)response.StatusCode).ToString() }
-                )
-            });
-        }
-
-        #endregion
-
-        #region 
-
-        // TODO 加一个成功响应时间、失败响应时间 分开统计的，根据状态码分开？
-
-        #endregion
     }
 }
