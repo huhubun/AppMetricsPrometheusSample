@@ -44,7 +44,7 @@ public class ApiMetrics
                             options.AddEnvTag("Release");
 #endif
 
-                            options.GlobalTags.Add("MyCustomTag", "MyCustonValue");
+                            options.GlobalTags.Add("my_custom_tag", "MyCustomValue");
                         })
                         .Build();
 
@@ -119,8 +119,3 @@ protected void Application_Start()
 ## Other implementations
 
 常见的，想要记录每个接口的调用次数、响应时间，我们可以通过 [DelegatingHandler](https://docs.microsoft.com/aspnet/web-api/overview/advanced/http-message-handlers) 来实现，参见 [MetricsHandler.cs](./Handlers/MetricsHandler.cs)。
-
-## Grafana sample
-
-![Grafana sample](./Grafana/dashboard.png)
-参见 [dashboard.json](./Grafana/dashboard.json)

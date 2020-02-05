@@ -33,7 +33,7 @@ namespace WebAPISample
                                 options.AddEnvTag("Release");
 #endif
 
-                                options.GlobalTags.Add("MyCustomTag", "MyCustonValue");
+                                options.GlobalTags.Add("my_custom_tag", "MyCustomValue");
                             })
                             .Build();
 
