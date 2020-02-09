@@ -53,7 +53,7 @@ public class ApiMetrics
 }
 ```
 
-1. `DefaultContextLabel` 的值会成为指标的前缀，这里设置成 `API`，则默认所有指标都为 `api.` 开头
+1. `DefaultContextLabel` 的值会成为指标的前缀，这里设置成 `API`，则默认所有指标都为 `api_` 开头
 1. `AddAppTag()` 会为所有指标添加一个名为 `app` 的 tag，内容为当前程序的名称
 1. `AddServerTag()` 会为所有指标添加一个名为 `server` 的 tag，内容是运行程序的机器名称
 1. `AddEnvTag()` 会为所有指标添加一个名为 `env` 的 tag，用于区分运行程序的环境

@@ -11,6 +11,7 @@
 ## .NET Framework Sample
 `DotNetFrameworkSample.sln`
 - [ASP.NET Web API](./src/DotNetFramework/WebAPISample/)
+- [ASP.NET MVC](./src/DotNetFramework/MvcSample/)
 
 ## .NET Core
 对于 ASP.NET Core ，App Metrics 提供了相关类库，参考 https://www.app-metrics.io/web-monitoring/aspnet-core/ 
@@ -21,6 +22,8 @@
 | api_boot_time_seconds | gauge | 程序启动时间 |
 | api_response_time | summary | 接口响应耗时 |
 | api_exception_count | counter | 接口抛出异常计数 |
+
+注：MVC Sample 也有相关指标，将 `api_` 前缀替换为 `mvc_` 即可
 
 ### 通用标签
 | 标签名称 | 含义 |
@@ -53,11 +56,13 @@ api_response_time{method="GET",route="api/values/{id}",status="200",app="WebAPIS
 
 接口响应耗时，类型为 summary，值的单位为秒，提供有如下几个额外的标签：
 
-| 标签名称 | 含义 |
-| ------- | ---- |
-| method | HTTP 请求方法 |
-| route | 所请求的 API 路由 |
-| status | HTTP 响应状态码 |
+| 标签名称 | 含义 | 备注 |
+| ------- | ---- | ---- |
+| status | HTTP 响应状态码 |  |
+| method | HTTP 请求方法 |  |
+| route | 所请求的 API 路由 | API Only |
+| controller | 处理请求的 Controller 名称 | MVC Only |
+| action | 处理请求的 Action 名称 | MVC Only |
 
 因为 `api_response_time` 是 summary，所以还带有如下指标：
 
@@ -68,6 +73,7 @@ api_response_time{method="GET",route="api/values/{id}",status="200",app="WebAPIS
 
 可以根据 `api_response_time_count` 来计算吞吐量等。
 
+
 ### api_exception_count
 ```
 # HELP api_exception_count 
@@ -77,11 +83,13 @@ api_exception_count{method="GET",route="api/values/{id}",exception="System.Index
 
 接口抛出异常计数，类型为 counter，当接口抛出异常时会进行记录，提供如下几个额外的标签：
 
-| 标签名称 | 含义 |
-| ------- | ---- |
-| method | HTTP 请求方法 |
-| route | 抛出异常的 API 路由 |
-| exception | 异常类型的完整名称 |
+| 标签名称 | 含义 | 备注 |
+| ------- | ---- | ---- |
+| exception | 异常类型的完整名称 |  |
+| method | HTTP 请求方法 |  |
+| route | 抛出异常的 API 路由 | API Only |
+| controller | 抛出异常的 Controller 名称 | MVC Only |
+| action | 抛出异常的 Action 名称 | MVC Only |
 
 ### Grafana sample
-参见 [dashboard.json](./grafana/dashboard.json)
+以 API 的指标为例，参见 [dashboard.json](./grafana/dashboard.json)
